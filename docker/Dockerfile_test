@@ -4,19 +4,22 @@ RUN adduser -D microblog
 WORKDIR /home/microblog
 
 # COPY . .
-COPY tests tests
-COPY migrations migrations
 COPY requirements requirements
 COPY requirements.txt microblog.py test.sh ./
+COPY Makefile Makefile
+COPY .pylintrc .pylintrc
+COPY pytest.ini pytest.ini
+
+
+RUN apk --no-cache add alpine-sdk=1.0-r0
 
 RUN python -m venv .venv
 ENV FLASK_APP microblog.py
-RUN .venv/bin/pip3 install -r requirements.txt
-
+RUN .venv/bin/pip3 install -r requirements/test.txt
+RUN make clean
 RUN chmod +x test.sh
 
 RUN chown -R microblog:microblog ./
-USER microblog
+USER root
 
-EXPOSE 5000
 ENTRYPOINT ["./test.sh"]
