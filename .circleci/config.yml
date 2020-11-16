@@ -25,5 +25,4 @@ jobs:
             . venv/bin/activate
             make test
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker tag microblog:latest mangepong/microblog:latest
             docker push mangepong/microblog:latest
