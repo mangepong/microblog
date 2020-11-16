@@ -22,6 +22,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            docker build -t test:latest -f docker/Dockerfile_test .
-            docker-compose up test
-            
+            make test
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker tag microblog:latest mangepong/microblog:latest
+            docker push mangepong/microblog:latest
