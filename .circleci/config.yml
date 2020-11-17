@@ -2,8 +2,6 @@
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/python:3.7
     machine: true
 
     working_directory: ~/repo
