@@ -3,7 +3,7 @@ version: 2.1
 executors:
   docker-publisher:
     environment:
-      IMAGE_NAME: poand18/microblog
+      IMAGE_NAME: mangepong/microblog
     docker:
     - image: circleci/buildpack-deps:stretch
 
@@ -29,10 +29,7 @@ jobs:
             make validate
             make test-unit
             make test-integration
-            #echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            #sudo docker push mangepong/microblog:latest
-    
-    build_image:
+  build_image:
     executor: docker-publisher
     steps:
       - checkout
@@ -48,7 +45,20 @@ jobs:
           paths:
             - ./image.tar
 
-
+  #publish-latest:
+  #  executor: docker-publisher
+  #  steps:
+  #    - attach_workspace:
+  #        at: /tmp/workspace
+  #    - setup_remote_docker
+  #    - run:
+  #       name: Load archived Docker image
+  #       command: docker load -i /tmp/workspace/image.tar
+  #    - run:
+  #        name: Publish Docker Image to Docker Hub
+  #        command: |
+  #          echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+  #          docker push $IMAGE_NAME:latest
 workflows:
   version: 2
   build-master:
@@ -63,3 +73,9 @@ workflows:
          filters:
            branches:
              only: master
+     #- publish-latest:
+     #    requires:
+     #      - build_image
+     #    filters:
+     #      branches:
+     #        only: master
