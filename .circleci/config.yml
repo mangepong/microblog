@@ -1,10 +1,9 @@
-
 # Python CircleCI 2.0 configuration file
 version: 2.1
 executors:
   docker-publisher:
     environment:
-      IMAGE_NAME: mangepong/microblog
+      IMAGE_NAME: poand18/microblog
     docker:
     - image: circleci/buildpack-deps:stretch
 
@@ -16,22 +15,20 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Step 1: obtain repo from GitHub
       - checkout
-      # Step 2: create virtual env and install dependencies
       - run:
-          name: install dependencies
+          name: Install dev dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -r requirements.txt
             make install-dev
-      # Step 3: run linter and tests
       - run:
           name: run tests
           command: |
             . venv/bin/activate
-            make test
+            make validate
+            make test-unit
+            make test-integration
             #echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             #sudo docker push mangepong/microblog:latest
     
