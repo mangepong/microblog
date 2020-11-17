@@ -1,8 +1,15 @@
 # Python CircleCI 2.0 configuration file
-version: 2
+version: 2.1
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: mangepong/microblog
+    docker:
+    - image: circleci/buildpack-deps:stretch
 jobs:
-  build:
-    machine: true
+  test:
+    docker:
+      - image: circleci/python:3.7
 
     working_directory: ~/repo
 
@@ -23,5 +30,21 @@ jobs:
           command: |
             . venv/bin/activate
             make test
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            sudo docker push mangepong/microblog:latest
+            #echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            #sudo docker push mangepong/microblog:latest
+    
+    build_image:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t microblog:latest -f docker/Dockerfile_prod .
+      - run:
+          name: Archive Docker image
+          command: docker save -o image.tar mircoblog
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
