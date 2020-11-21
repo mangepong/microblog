@@ -1,6 +1,14 @@
 ---
 # Here you can add variables that will be available for all hosts.
 
-region: us-east-1
+region: northeurope
 project_name: devops
-domain_name: <insert domain name>
+resource_group: BTH-kmom01-EMMU18-d81f46
+domain_name: mangepongjs.me
+
+root_user: azureuser
+
+vmtags:
+    StudentId: "emmu18"
+
+local_ssh_location: '/home/mange/.ssh/.pem.pub'
