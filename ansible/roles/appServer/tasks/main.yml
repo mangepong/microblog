@@ -7,7 +7,7 @@
 -   name: Start microblog docker container
     docker_container:
        name: "microblog"
-       image: "poand18/microblog:latest"
+       image: "mangepong/microblog:latest"
        ports:
            - "8000:5000"
        restart_policy: always
