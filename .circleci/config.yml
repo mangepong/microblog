@@ -59,6 +59,25 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
+
+  deploy-latest:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - run:
+         name: Install dependancies
+         command: |
+             sudo apt-get install python3-venv
+             python3 -m venv venv
+             . venv/bin/activate
+             make install-deploy
+      - run:
+          name: Deploy appServer
+          command: |
+              . venv/bin/activate
+              cd ansible
+              ansible-playbook gather_vm_instances.yml appServer.ym
+
 workflows:
   version: 2
   build-master:
@@ -76,6 +95,12 @@ workflows:
      - publish-latest:
          requires:
            - build_image
+         filters:
+           branches:
+             only: master
+     - deploy-latest:
+         requires:
+           - publish-latest
          filters:
            branches:
              only: master

@@ -3,6 +3,6 @@
 -   hosts: local
     connection: local # Keep ansible from open ssh connection
     gather_facts: False
-    no_log: True
+    no_log: False
     roles:
         -   provision_instances

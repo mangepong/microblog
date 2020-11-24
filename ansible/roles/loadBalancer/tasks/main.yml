@@ -1,0 +1,64 @@
+
+---
+-   name: "apt-get update"
+    apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+-   name: Install packages
+    apt:
+        force_apt_get: yes
+        name: "{{ packages }}"
+
+-   name: Check if certificate already exists
+    stat:
+        path: /etc/letsencrypt/live/{{ domain_name }}/cert
+    register: letsencrypt_cert
+
+-   debug: msg="{{ letsencrypt_cert.stat.exists }}"
+
+-   name: Stop services to allow certbot to generate a cert
+    command: service nginx stop
+    when: not letsencrypt_cert.stat.exists
+
+-   name: Generate a new certificate if one doesn't exist
+    shell: "certbot certonly --standalone --noninteractive --expand --agree-tos --email {{ admin_email }} -d {{ domain_name }} -d www.{{ domain_name }}"
+    when: not letsencrypt_cert.stat.exists
+
+-   name: Delete default nginx file
+    file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+    notify:
+        - restart nginx
+
+-   name: Template nginx.conf.j2 to remote server
+    template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        owner: "{{ server_user }}"
+        group: "{{ server_user }}"
+        mode: '644'
+    notify:
+        - restart nginx
+
+-   name: Template load-balancer.conf.j2 to remote server
+    template:
+        src: templates/load-balancer.conf.j2
+        dest: /etc/nginx/sites-available/load-balancer.conf
+        owner: "{{ server_user }}"
+        group: "{{ server_user }}"
+        mode: '644'
+    notify:
+        - restart nginx
+
+-   name: Create symbolic link between sites-allowed nd sites-enabled
+    file:
+        src: /etc/nginx/sites-available/load-balancer.conf
+        dest: /etc/nginx/sites-enabled/load-balancer.conf
+        owner: "{{ server_user }}"
+        group: "{{ server_user }}"
+        state: link
+        force: "True"
+    notify:
+        - restart nginx

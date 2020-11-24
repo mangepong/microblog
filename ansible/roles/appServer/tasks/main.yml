@@ -1,0 +1,15 @@
+---
+-   name: Install packages
+    apt:
+        force_apt_get: yes
+        name: "{{ packages }}"
+
+-   name: Start microblog docker container
+    docker_container:
+       name: "microblog"
+       image: "poand18/microblog:latest"
+       ports:
+           - "8000:5000"
+       restart_policy: always
+       env:
+          DATABASE_URL: "mysql+pymysql://microblog:passwd@{{ groups['database'][0] }}/microblog"
