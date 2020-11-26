@@ -1,11 +1,10 @@
-
 ---
 -   name: Install packages
     apt:
         force_apt_get: yes
         name: "{{ packages }}"
 
--   name: Copy docker-compose to server
+-   name: Copy docker-compose
     copy:
         src: files/docker-compose
         dest: /home/{{ server_user }}/docker-compose.yml

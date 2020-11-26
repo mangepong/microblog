@@ -12,4 +12,4 @@
            - "8000:5000"
        restart_policy: always
        env:
-          DATABASE_URL: "mysql+pymysql://microblog:Darkblaze00@{{ groups['database'][0] }}/microblog"
+          DATABASE_URL: "mysql+pymysql://microblog:password@{{ groups['database'][0] }}/microblog"
