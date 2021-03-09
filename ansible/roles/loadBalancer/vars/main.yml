@@ -1,6 +1,6 @@
 ---
 lb_method: "ip_hash"
-admin_email: "emil_mange@hotmail.com"
+admin_email: "ponteman@live.se"
 
 packages:
     -   nginx

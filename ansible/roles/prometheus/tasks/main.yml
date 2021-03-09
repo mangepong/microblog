@@ -1,0 +1,19 @@
+---
+-   name: Get and extract prometheus
+    unarchive:
+        src: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+        dest: .
+        remote_src: yes
+
+-   name: Copy prometheus.yml
+    template:
+        src: templates/prometheus.conf.j2
+        dest: prometheus-{{ prometheus_version }}.linux-amd64/prometheus.yml
+        owner: "{{ server_user }}"
+        group: "{{ server_user }}"
+        mode: '755'
+
+-   name: Start prometheus
+    shell: nohup sudo ./prometheus &
+    args:
+        chdir: prometheus-{{ prometheus_version }}.linux-amd64/

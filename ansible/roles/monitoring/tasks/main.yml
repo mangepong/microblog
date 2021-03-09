@@ -1,0 +1,35 @@
+---
+-   name: Get and extract node exporter
+    unarchive:
+        src: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+        dest: .
+        remote_src: yes
+
+-   name: Create a node exporter user
+    command: useradd -rs /bin/false node_exporter
+
+-   name: Copy the binary to your /usr/local/bin folder
+    copy:
+        src: node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+        dest: /usr/local/bin
+        owner: "node_exporter"
+        group: "node_exporter"
+        remote_src: yes
+        mode: 0755
+
+-   name: Copy node_exporter service file
+    template:
+        src: templates/node_exporter.service.j2
+        dest: /etc/systemd/system/node_exporter.service
+        owner: "{{ server_user }}"
+        group: "{{ server_user }}"
+        mode: 0755
+
+-   name: Reload daemon
+    systemd:
+        daemon_reload: yes
+
+-   name: Start node_exporter
+    systemd:
+        state: started
+        name: node_exporter

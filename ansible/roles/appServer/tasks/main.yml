@@ -1,4 +1,9 @@
 ---
+-   name: "apt-get update"
+    apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
 -   name: Install packages
     apt:
         force_apt_get: yes
@@ -8,8 +13,21 @@
     docker_container:
        name: "microblog"
        image: "mangepong/microblog:latest"
-       ports:
-           - "8000:5000"
+       network_mode: host
        restart_policy: always
        env:
-          DATABASE_URL: "mysql+pymysql://microblog:password@{{ groups['database'][0] }}/microblog"
+          DATABASE_URL: "mysql+pymysql://microblog:passwd@{{ groups['database'][0] }}/microblog"
+
+-   name: Pull docker container prom/statsd-exporter
+    command: docker pull prom/statsd-exporter
+
+-   name: Copy statsd.conf
+    copy:
+        src: files/statsd.conf.j2
+        dest: /home/{{ server_user }}/statsd.conf
+        owner: "{{ server_user }}"
+        group: "{{ server_user }}"
+        mode: '644'
+
+-   name: Start statsd exporter
+    command: docker run -dP --net=host -v ${PWD}/statsd.conf:/statsd/statsd.conf prom/statsd-exporter "--statsd.mapping-config=/statsd/statsd.conf"

@@ -1,6 +1,6 @@
 ---
-   packages:
-       -   fail2ban
-       -   tmux
-       -   git
-       -   unattended-upgrades
+packages:
+    -   fail2ban
+    -   tmux
+    -   git
+    -   unattended-upgrades

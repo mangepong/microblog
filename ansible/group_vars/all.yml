@@ -20,3 +20,4 @@ server_user: deploy
 server_user_pass: $6$.5Z5hadF$.E9uGg4.fUzb0bZSCDjOZm0Nlbet1VS/WaoUszZCEhYo1l1n7zOl2WU0kZ8X.ncjZrkQfGM7mnp3c9E1sMeoH1
 server_user_groups:
     -   sudo
+root_password: $6$iUPbY1c9VEiMd$NPsGFBEa/YWwWtWCq8huYAbE7wJUWTI0GSJV0o0KNLlN6rkFp9RqbB38YBUHx24WTTNTC7UzitmogfzIXoszy0

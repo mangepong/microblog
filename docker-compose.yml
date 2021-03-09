@@ -1,20 +1,31 @@
 version: '3.3'
 
 services:
-   prod:
-     image: microblog:latest
-     ports:
-       - "8000:5000"
-     volumes:
-       - ./app:/home/microblog/app
-     restart: always
-     environment:
-       FLASK_APP: microblog.py
+    prod:
+        image: mangepong/microblog:latest
+        container_name: "microblog"
+        ports:
+            - "8000:5000"
+        links:
+            - "mysql:dbserver"
+        environment:
+            - SECRET_KEY=production
+            - DATABASE_URL=mysql+pymysql://microblog:passwd@dbserver/microblog
+        restart:
+            "always"
+
+    mysql:
+        image: mysql/mysql-server:5.7
+        container_name: "dbserver"
+        environment:
+            - MYSQL_DATABASE=microblog
+            - MYSQL_USER=microblog
+            - MYSQL_PASSWORD=passwd
+        volumes:
+            - ./mysql-data:/var/lib/mysql
 
    test:
      image: test:latest
      volumes:
        - ./app:/home/microblog/app
        - ./tests:/home/microblog/tests
-     
-

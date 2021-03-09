@@ -2,3 +2,4 @@
 packages:
     -   docker
     -   docker-compose
+mysql_root_password: passwd

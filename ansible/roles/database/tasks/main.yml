@@ -1,4 +1,9 @@
 ---
+-   name: "apt-get update"
+    apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
 -   name: Install packages
     apt:
         force_apt_get: yes
@@ -15,3 +20,28 @@
 -   name: Run docker-compose up
     docker_compose:
         project_src: /home/{{ server_user }}/
+
+-   name: Copy mysqld-exporter
+    copy:
+        src: files/mysqld-exporter.sql
+        dest: /home/{{ server_user }}/mysqld-exporter.sql
+        owner: "{{ server_user }}"
+        group: "{{ server_user }}"
+        mode: '644'
+
+-   name: Add exporter user
+    shell: docker exec -i dbserver mysql -uroot -p{{ mysql_root_password }} < /home/{{ server_user }}/mysqld-exporter.sql
+
+-   name: Run docker mysql-exporter
+    command: docker run -d \
+            -p 9104:9104 \
+            --network host \
+            -e DATA_SOURCE_NAME="exporter:passwd@(localhost:3306)/" \
+            --restart always \
+            prom/mysqld-exporter:latest \
+            --collect.auto_increment.columns \
+            --collect.info_schema.processlist \
+            --collect.binlog_size \
+            --collect.engine_innodb_status \
+            --collect.engine_tokudb_status \
+            --collect.global_status

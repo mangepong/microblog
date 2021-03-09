@@ -1,0 +1,37 @@
+---
+- name: test
+  command: sudo apt --fix-broken install -y
+
+-   name: Install packages
+    apt:
+        force_apt_get: yes
+        name: "{{ packages }}"
+
+-   name: Update apt-cache and upgrade
+    apt:
+        force_apt_get: yes
+        update_cache: "True"
+        cache_valid_time: 3600
+        upgrade: yes
+
+-   name: Download grafana to server
+    get_url:
+        url: "https://dl.grafana.com/oss/release/grafana_{{ grafana_version }}_amd64.deb"
+        dest: .
+        mode: '440'
+
+-   name: Fix broken install
+    command: sudo apt --fix-broken install -y
+
+-   name: Extract .deb file and start Grafana service
+    command: sudo dpkg -i grafana_{{ grafana_version }}_amd64.deb
+
+-   name: Copy grafana.ini file
+    template:
+        src: templates/grafana.ini.j2
+        dest: /etc/grafana/grafana.ini
+
+-   name: Restart Grafana service
+    service:
+        name: grafana-server
+        state: restarted

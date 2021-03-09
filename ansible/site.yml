@@ -7,3 +7,4 @@
 -   import_playbook: database.yml
 -   import_playbook: appServer.yml
 -   import_playbook: loadBalancer.yml
+-   import_playbook: monitoring.yml
