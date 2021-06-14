@@ -29,7 +29,6 @@ jobs:
           command: |
             . venv/bin/activate
             make test-unit
-            make test-integration
 
   snyk:
       docker:
