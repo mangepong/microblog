@@ -34,7 +34,7 @@ jobs:
 
   snyk:
       docker:
-          - image: circleci/python:3.7
+          - image: circleci/python:3.5
       working_directory: ~/repo
       steps:
           - checkout
