@@ -1,3 +1,4 @@
+# pylint: disable
 """
 Contains routes for main purpose of app
 """
