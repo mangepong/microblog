@@ -12,6 +12,8 @@ COPY requirements.txt microblog.py boot.sh ./
 RUN python -m venv .venv
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
      && pip install cython
+RUN apk add build-base
+RUN apk add alpine-sdk
 ENV FLASK_APP microblog.py
 RUN .venv/bin/pip3 install -r requirements.txt
 
