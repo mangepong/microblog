@@ -1,4 +1,4 @@
-# pylint: disable
+# pylint: skip-file
 """
 Contains routes for main purpose of app
 """
