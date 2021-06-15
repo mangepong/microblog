@@ -105,9 +105,7 @@ workflows:
      - test:
          filters:
            branches:
-             only:
-               - master
-               - old-project-state
+             only: master
      - snyk:
          filters:
             branches:
