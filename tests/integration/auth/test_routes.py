@@ -1,7 +1,7 @@
 """
 Test routes for routes for authorizing users, app/auth/routes
 """
-# pylint: disable=redefined-outer-name,unused-argument
+# pylint: skip-file
 from flask import session
 
 def test_register_login_login_register_when_logged_in(client, user_dict, register_user_response):
