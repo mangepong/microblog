@@ -27,6 +27,10 @@ http {
        ssl_certificate /etc/letsencrypt/live/{{ domain_name }}/cert.pem;
        ssl_certificate_key /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+       
+       server_tokens off;
+       add_header X-Frame-Options "SAMEORIGIN";
+       add_header X-Content-Type-Options nosniff;
 
        location /grafana/ {
           proxy_pass http://{{ groups['monitoring'][0] }}:3000/;
@@ -38,6 +42,7 @@ http {
       }
 
        location / {
+          proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
           proxy_pass http://app-hosts;
        }
 
