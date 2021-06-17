@@ -172,6 +172,15 @@ clean-py:
 	find . -name '.pytest_cache' -exec rm -fr {} +
 
 
+# target: bandit                          - Run bandit tool to analyze security within code
+.PHONY: bandit
+bandit:
+	bandit -r app
+
+.PHONY: zap
+zap:
+	docker run owasp/zap2docker-weekly zap-baseline.py -t https://www.mangepongjs.me
+
 
 ## target: clean-cov                    - Remove generated coverage files
 .PHONY: clean-cov

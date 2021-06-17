@@ -30,6 +30,7 @@ jobs:
             . venv/bin/activate
             make validate
             make test-unit
+            make bandit
 
   snyk:
       docker:
