@@ -68,14 +68,14 @@ sg_groups:
         access: Allow
         priority: 1002
         direction: Inbound
-        source_address_prefix: "{{ groups["appServer"][0] }}/32"
+        source_address_prefix: '{{ groups["appServer"][0] }}/32'
       - name: Port_9104
         protocol: Tcp
         destination_port_range: 9104
         access: Allow
         priority: 1012
         direction: Inbound
-        source_address_prefix: "{{ groups["monitoring"][0] }}/32"
+        source_address_prefix: '{{ groups["monitoring"][0] }}/32'
   - name: monitoring
     port_rules:
       - name: SSH
@@ -91,25 +91,25 @@ sg_groups:
         access: Allow
         priority: 1002
         direction: Inbound
-        source_address_prefix: "{{ groups["monitoring"][0] }}/32"
+        source_address_prefix: '{{ groups["monitoring"][0] }}/32'
       - name: alert
         protocol: Tcp
         destination_port_range: 9093
         access: Allow
         priority: 1003
         direction: Inbound
-        source_address_prefix: "{{ groups["monitoring"][0] }}/32"
+        source_address_prefix: '{{ groups["monitoring"][0] }}/32'
       - name: grafana
         protocol: Tcp
         destination_port_range: 3000
         access: Allow
         priority: 1004
         direction: Inbound
-        source_address_prefix: "{{ groups["loadBalancer"][0] }}/32"
+        source_address_prefix: '{{ groups["loadBalancer"][0] }}/32'
       - name: node_exporter
         protocol: Tcp
         destination_port_range: 9100
         access: Allow
         priority: 1005
         direction: Inbound
-        source_address_prefix: "{{ groups["monitoring"][0] }}/32"
+        source_address_prefix: '{{ groups["monitoring"][0] }}/32'
