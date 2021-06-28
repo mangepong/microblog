@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: microblog
+  labels:
+    app: microblog
+spec:
+  type: NodePort
+  ports:
+    - port: 5000
+  selector:
+    app: microblog
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microblog
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: microblog
+  template:
+    metadata:
+      labels:
+        app: microblog
+    spec:
+      containers:
+        - image: mangepong/microblog:no-statsd
+          name: microblog
+          env:
+            - name: SECRET_KEY
+              value: passwd
+            - name: DATABASE_URL
+              value: mysql+pymysql://microblog:passwd@mysql/microblog
+          ports:
+            - containerPort: 5000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
